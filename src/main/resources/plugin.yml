@@ -1,0 +1,17 @@
+name: MyServer
+version: 1.0.0
+main: com.example.server.MinecraftPlugin
+description: A custom Minecraft server plugin
+authors:
+  - Developer
+
+commands:
+  hello:
+    description: Says hello
+    usage: /hello
+  sethome:
+    description: Saves your current location as home
+    usage: /sethome
+  home:
+    description: Teleports you to your saved home
+    usage: /home
