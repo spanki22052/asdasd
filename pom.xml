@@ -10,9 +10,6 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Minecraft Server</name>
-    <description>A custom Minecraft server built with Paper API</description>
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -27,7 +24,6 @@
     </repositories>
 
     <dependencies>
-        <!-- Paper API for Minecraft server development -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -37,14 +33,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -53,6 +41,10 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <proc>none</proc>
+                    <compilerArgs>
+                        <arg>-Xlint:-options</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -60,11 +52,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
                     <finalName>minecraft-server-${project.version}</finalName>
                 </configuration>
             </plugin>
