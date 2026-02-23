@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class HomeCommand implements CommandExecutor {
 
-    private HomeManager homeManager;
+    private final HomeService homeService;
 
-    public HomeCommand(HomeManager homeManager) {
-        this.homeManager = homeManager;
+    public HomeCommand(HomeService homeService) {
+        this.homeService = homeService;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
             @NotNull String label, @NotNull String[] args) {
-        if (homeManager == null) {
-            sender.sendMessage("§cОшибка плагина! HomeManager не инициализирован.");
+        if (homeService == null) {
+            sender.sendMessage("§cОшибка плагина! HomeService не инициализирован.");
             return false;
         }
 
@@ -33,12 +33,12 @@ public class HomeCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!homeManager.hasHome(player)) {
+        if (!homeService.hasHome(player)) {
             player.sendMessage("§cУ вас нет сохранённого дома! Используйте /sethome чтобы его установить.");
             return false;
         }
 
-        Location home = homeManager.getHome(player);
+        Location home = homeService.getHome(player);
         if (home == null) {
             player.sendMessage("§cОшибка при загрузке дома! Мир может быть удалён.");
             return false;

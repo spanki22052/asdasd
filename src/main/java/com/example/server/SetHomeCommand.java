@@ -11,17 +11,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SetHomeCommand implements CommandExecutor {
 
-    private HomeManager homeManager;
+    private final HomeService homeService;
 
-    public SetHomeCommand(HomeManager homeManager) {
-        this.homeManager = homeManager;
+    public SetHomeCommand(HomeService homeService) {
+        this.homeService = homeService;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
             @NotNull String label, @NotNull String[] args) {
-        if (homeManager == null) {
-            sender.sendMessage("§cОшибка плагина! HomeManager не инициализирован.");
+        if (homeService == null) {
+            sender.sendMessage("§cОшибка плагина! HomeService не инициализирован.");
             return false;
         }
 
@@ -31,17 +31,11 @@ public class SetHomeCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        try {
-            homeManager.setHome(player);
-            player.sendMessage("§aДом успешно сохранён!");
-            player.sendMessage("§7Локация: §f" + player.getLocation().getBlockX() + ", " + 
-                             player.getLocation().getBlockY() + ", " + 
-                             player.getLocation().getBlockZ());
-            return true;
-        } catch (Exception e) {
-            player.sendMessage("§cОшибка при сохранении дома!");
-            player.sendMessage("§c" + e.getMessage());
-            return false;
-        }
+        homeService.setHome(player);
+        player.sendMessage("§aДом успешно сохранён!");
+        player.sendMessage("§7Локация: §f" + player.getLocation().getBlockX() + ", "
+                + player.getLocation().getBlockY() + ", "
+                + player.getLocation().getBlockZ());
+        return true;
     }
 }

@@ -7,33 +7,30 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class MinecraftPlugin extends JavaPlugin {
 
-    private HomeManager homeManager;
+    private HomeService homeService;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         getLogger().info("MyServer plugin has been enabled!");
 
-        // Инициализируем manager для домов
-        homeManager = new HomeManager(this);
-
-        if (homeManager == null) {
-            getLogger().severe("Failed to initialize HomeManager!");
-            return;
-        }
+        // Инициализируем сервис домов
+        HomeRepository repository = new YamlHomeRepository(this);
+        homeService = new HomeService(this, repository);
+        homeService.load();
 
         // Register commands and event listeners here
         if (getCommand("hello") != null) {
             getCommand("hello").setExecutor(new HelloCommand());
         }
         if (getCommand("sethome") != null) {
-            getCommand("sethome").setExecutor(new SetHomeCommand(homeManager));
+            getCommand("sethome").setExecutor(new SetHomeCommand(homeService));
         }
         if (getCommand("home") != null) {
-            getCommand("home").setExecutor(new HomeCommand(homeManager));
+            getCommand("home").setExecutor(new HomeCommand(homeService));
         }
         if (getCommand("delhome") != null) {
-            getCommand("delhome").setExecutor(new DeleteHomeCommand(homeManager));
+            getCommand("delhome").setExecutor(new DeleteHomeCommand(homeService));
         }
     }
 
@@ -41,5 +38,8 @@ public class MinecraftPlugin extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         getLogger().info("MyServer plugin has been disabled!");
+        if (homeService != null) {
+            homeService.flush();
+        }
     }
 }

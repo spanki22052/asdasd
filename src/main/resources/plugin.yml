@@ -1,6 +1,7 @@
 name: MyServer
 version: 1.0.0
 main: com.example.server.MinecraftPlugin
+api-version: 1.21
 description: A custom Minecraft server plugin
 authors:
   - Developer
