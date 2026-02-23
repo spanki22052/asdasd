@@ -1,0 +1,41 @@
+# MyServer Plugin Configuration
+
+# Storage type: 'sqlite' (recommended) or 'yaml'
+# SQLite provides better performance and scalability
+# YAML is simpler but slower for large datasets
+storage-type: sqlite
+
+# Home settings
+homes:
+  # Maximum number of homes per player (set to -1 for unlimited)
+  max-homes-per-player: 1
+
+  # Cooldown in seconds between teleports (set to 0 to disable)
+  teleport-cooldown: 3
+
+  # Teleport delay in seconds (set to 0 for instant teleport)
+  # Player must stand still during this time
+  teleport-delay: 3
+
+# Performance settings
+performance:
+  # Database connection pool size (only for SQLite)
+  # Recommended: 2-10 depending on server load
+  connection-pool-size: 5
+
+  # Auto-save interval in minutes (only for YAML storage)
+  # SQLite saves immediately on each change
+  auto-save-interval: 5
+
+# Messages
+messages:
+  prefix: "&8[&6Home&8]&r"
+  home-set: "&aДом успешно установлен!"
+  home-teleport: "&aВы телепортировались домой!"
+  home-deleted: "&aДом успешно удалён!"
+  no-home: "&cУ вас нет сохранённого дома! Используйте /sethome"
+  cooldown: "&cПодождите {time} секунд перед следующей телепортацией"
+  delay: "&aТелепортация через {time} секунд. Не двигайтесь!"
+  delay-cancelled: "&cТелепортация отменена! Вы сдвинулись с места."
+  max-homes: "&cВы достигли максимального количества домов!"
+  world-not-found: "&cМир вашего дома больше не существует!"
