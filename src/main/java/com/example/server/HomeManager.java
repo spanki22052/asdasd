@@ -18,6 +18,7 @@ public class HomeManager {
     private JavaPlugin plugin;
     private File homesFile;
     private FileConfiguration homesConfig;
+    private boolean isInitialized = false;
 
     public HomeManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -32,36 +33,49 @@ public class HomeManager {
         if (!homesFile.exists()) {
             try {
                 homesFile.createNewFile();
+                isInitialized = true;
             } catch (IOException e) {
                 plugin.getLogger().severe("Не удалось создать файл homes.yml!");
+                return;
             }
         }
 
         loadHomes();
+        isInitialized = true;
     }
 
     /**
      * Загружает конфигурацию домов
      */
-    private void loadHomes() {
+    private synchronized void loadHomes() {
         this.homesConfig = YamlConfiguration.loadConfiguration(homesFile);
     }
 
     /**
-     * Сохраняет конфигурацию на диск (синхронно)
+     * Сохраняет конфигурацию на диск (асинхронно, не блокирует главный поток)
      */
     private void saveHomes() {
-        try {
-            homesConfig.save(homesFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Не удалось сохранить homes.yml!");
+        if (!isInitialized) {
+            return;
         }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (this) {
+                try {
+                    homesConfig.save(homesFile);
+                } catch (IOException e) {
+                    plugin.getLogger().severe("Не удалось сохранить homes.yml!");
+                }
+            }
+        });
     }
 
     /**
      * Сохраняет дом для игрока
      */
     public void setHome(Player player) {
+        if (!isInitialized || player == null || player.getLocation() == null) {
+            return;
+        }
         String playerName = player.getName();
         Location loc = player.getLocation();
 
@@ -78,9 +92,13 @@ public class HomeManager {
     }
 
     /**
-     * Получает дом игрока
+     * Получает дом игрока (берёт из памяти, не перезагружает с диска)
      */
     public Location getHome(Player player) {
+        if (!isInitialized || player == null) {
+            return null;
+        }
+
         String playerName = player.getName();
         String path = "homes." + playerName;
 
@@ -89,6 +107,9 @@ public class HomeManager {
         }
 
         String worldName = homesConfig.getString(path + ".world");
+        if (worldName == null) {
+            return null;
+        }
         double x = homesConfig.getDouble(path + ".x");
         double y = homesConfig.getDouble(path + ".y");
         double z = homesConfig.getDouble(path + ".z");
@@ -107,6 +128,9 @@ public class HomeManager {
      * Проверяет, есть ли дом у игрока
      */
     public boolean hasHome(Player player) {
+        if (!isInitialized || player == null) {
+            return false;
+        }
         return homesConfig.contains("homes." + player.getName());
     }
 }

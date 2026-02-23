@@ -17,6 +17,11 @@ public class MinecraftPlugin extends JavaPlugin {
         // Инициализируем manager для домов
         homeManager = new HomeManager(this);
 
+        if (homeManager == null) {
+            getLogger().severe("Failed to initialize HomeManager!");
+            return;
+        }
+
         // Register commands and event listeners here
         if (getCommand("hello") != null) {
             getCommand("hello").setExecutor(new HelloCommand());
