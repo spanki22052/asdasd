@@ -14,4 +14,6 @@ commands:
     usage: /sethome
   home:
     description: Teleports you to your saved home
-    usage: /home
+    usage: /home  delhome:
+    description: Deletes your saved home
+    usage: /delhome

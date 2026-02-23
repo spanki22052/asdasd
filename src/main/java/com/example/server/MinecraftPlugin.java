@@ -32,6 +32,9 @@ public class MinecraftPlugin extends JavaPlugin {
         if (getCommand("home") != null) {
             getCommand("home").setExecutor(new HomeCommand(homeManager));
         }
+        if (getCommand("delhome") != null) {
+            getCommand("delhome").setExecutor(new DeleteHomeCommand(homeManager));
+        }
     }
 
     @Override

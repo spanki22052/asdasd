@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Команда для сохранения текущей локации как дома
+ * Команда для удаления сохранённого дома
  */
-public class SetHomeCommand implements CommandExecutor {
+public class DeleteHomeCommand implements CommandExecutor {
 
     private HomeManager homeManager;
 
-    public SetHomeCommand(HomeManager homeManager) {
+    public DeleteHomeCommand(HomeManager homeManager) {
         this.homeManager = homeManager;
     }
 
@@ -31,17 +31,14 @@ public class SetHomeCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        try {
-            homeManager.setHome(player);
-            player.sendMessage("§aДом успешно сохранён!");
-            player.sendMessage("§7Локация: §f" + player.getLocation().getBlockX() + ", " + 
-                             player.getLocation().getBlockY() + ", " + 
-                             player.getLocation().getBlockZ());
-            return true;
-        } catch (Exception e) {
-            player.sendMessage("§cОшибка при сохранении дома!");
-            player.sendMessage("§c" + e.getMessage());
+
+        if (!homeManager.hasHome(player)) {
+            player.sendMessage("§cУ вас нет сохранённого дома!");
             return false;
         }
+
+        homeManager.deleteHome(player);
+        player.sendMessage("§aДом успешно удалён!");
+        return true;
     }
 }
