@@ -48,14 +48,17 @@ public class HomeManager {
     }
 
     /**
-     * Сохраняет конфигурацию на диск
+     * Сохраняет конфигурацию на диск (асинхронно)
      */
     private void saveHomes() {
-        try {
-            homesConfig.save(homesFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Не удалось сохранить homes.yml!");
-        }
+        // Сохранение в отдельном потоке чтобы не блокировать главный поток сервера
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                homesConfig.save(homesFile);
+            } catch (IOException e) {
+                plugin.getLogger().severe("Не удалось сохранить homes.yml!");
+            }
+        });
     }
 
     /**
