@@ -18,9 +18,15 @@ public class MinecraftPlugin extends JavaPlugin {
         homeManager = new HomeManager(this);
 
         // Register commands and event listeners here
-        getCommand("hello").setExecutor(new HelloCommand());
-        getCommand("sethome").setExecutor(new SetHomeCommand(homeManager));
-        getCommand("home").setExecutor(new HomeCommand(homeManager));
+        if (getCommand("hello") != null) {
+            getCommand("hello").setExecutor(new HelloCommand());
+        }
+        if (getCommand("sethome") != null) {
+            getCommand("sethome").setExecutor(new SetHomeCommand(homeManager));
+        }
+        if (getCommand("home") != null) {
+            getCommand("home").setExecutor(new HomeCommand(homeManager));
+        }
     }
 
     @Override
